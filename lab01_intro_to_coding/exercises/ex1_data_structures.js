@@ -32,9 +32,9 @@ var years = [
 
 // Task 1
 // Console log the length of each Array
-console.log(names.length);
-console.log(URLs.length);
-console.log(year.length);
+console.log(names.length)
+console.log(URLs.length)
+console.log(years.length)
 
 
 
@@ -44,9 +44,9 @@ var newName = "The International Center of Photography"
 var newURL = "icp.org"
 var newYear = 1974
 
-names.push(newName);
-URLs[newURL] = newURL;
-years = years.concat(newYear);
+names.push(newName); // Push it to the list 
+URLs[URLs.length] = newURL;  // Add it in to the index be more speific
+years = years.concat(newYear); // 
 
 // Task 3
 // construct an Object out of our three Arrays
@@ -57,6 +57,8 @@ var result = {
     year: 2019
   }
 }
+// this is a array of objects 
+
 
 var museums = {};
 for (var i = 0; i < names.length; i++) {
@@ -67,6 +69,8 @@ for (var i = 0; i < names.length; i++) {
   museums[currentName] = {};
   museums[currentName]["URL"] = currentURL;
   museums[currentName].year = currentYear;
+  // the first is a string 
+  // the second one .year is can no cast space, it works for any type 
 }
 
 console.log('museums', museums)
@@ -87,14 +91,13 @@ console.log('museums2', museums2)
 // Task
 // Write a function to add a new museum object, with properties URL and year, to an existing museums object. Call it on museums2
 function addAMuseum(museums, newName, newURL, newYear){
-  museums[newName] = {
-    URL: newURL,
-    year: newYear
-  };
+  museums[newName] = {};
+  museums[newName].URL = newURL;
+  museums[newName].year = newYear;
 
   return museums;
 }
 
-addAMuseum(museums2, "The International Center of Photography", "icp.org", 1974);
+addAMuseum(museums2, "MoMath", "momath.org", 2014);
 
 console.log('museums2', museums2);
