@@ -5,6 +5,7 @@
 
 // Task
 // What does DOM stand for?
+// Document Object Model 
 
 // Task
 // Open the file index.html in your browser. Open the index.html file in VS Code, right-click the tab and select "Open in Browser"
@@ -15,15 +16,16 @@
 
 // Task
 // What does the following code do?
-const viz = document.body.querySelector(".viz");
-const button = document.body.querySelector("#button");
+const viz = document.body.querySelector(".viz"); // Selecting Class
+const button = document.body.querySelector("#button"); // selecting ID
+//ID is more sepcific and should used limited
 
-console.log(viz, viz.children);
+console.log(viz, viz.children); 
 
-const addChildToViz = () => {
+const addChildToViz = (len) => {
   const newChild = document.createElement("div");
   newChild.className = "rectangle";
-  newChild.style.height = Math.random() * 100 + "px";
+  newChild.style.height = len * 100 + "px";
   viz.appendChild(newChild);
 };
 
@@ -39,7 +41,11 @@ function drawIrisData() {
     .fetch("./iris_json.json")
     .then(data => data.json())
     .then(data => {
-      console.log(data);
+      //console.log(data);
+      data.forEach(e => {
+        addChildToViz(e.petallength);
+      });
+      
     });
 }
 
