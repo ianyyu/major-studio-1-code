@@ -3,14 +3,14 @@
 // Using this data set https://collections.si.edu/search/results.htm?q=Flowers&view=grid&fq=data_source%3A%22Cooper+Hewitt%2C+Smithsonian+Design+Museum%22&fq=online_media_type%3A%22Images%22&media.CC0=true&fq=object_type:%22Embroidery+%28visual+works%29%22
 
 // put your API key here;
-const apiKey = "";  
+const apiKey = "dd8pcOamWX5XvNyOALOumgEppI7gy5R5mtLM0QfW";  
 
 // search base URL
 const searchBaseURL = "https://api.si.edu/openaccess/api/v1.0/search";
 
 // constructing the initial search query
 // const search =  'mask AND unit_code:"FSG"';
-const search =  `Flowers AND unit_code:"CHNDM" AND object_type:"Embroidery (visual works)" AND online_media_type:"Images"`;
+const search = `type:edanmdm AND NMNHENTO+bee`;;
 
 
 // array that we will write into
@@ -54,22 +54,41 @@ function fetchSearchData(searchTerm) {
 // fetching all the data listed under our search and pushing them all into our custom array
 function fetchAllData(url) {
   window
-  .fetch(url)
-  .then(res => res.json())
-  .then(data => {
-    console.log(data)
+    .fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data); // Log the full response for debugging
 
-    data.response.rows.forEach(function(n) {
-      addObject(n);
+      if (data.response && data.response.rows) {
+        data.response.rows.forEach(function (n) {
+          // Log each item to see its structure
+          console.log(n);
+
+          // Check if geoLocation exists
+          if (n.content.indexedStructured.geoLocation) {
+            // Extract only geoLocation data
+            let geoLocations = n.content.indexedStructured.geoLocation;
+            
+            // Push each geoLocation into myArray
+            geoLocations.forEach(location => {
+              myArray.push(location);
+            });
+          }
+        });
+
+        jsonString = JSON.stringify(myArray); // Convert myArray to JSON string
+        console.log(myArray); // Log the array of geoLocation data
+      } else {
+        console.log("No rows found in response.");
+      }
+    })
+    .catch(error => {
+      console.log(error);
     });
-    jsonString += JSON.stringify(myArray);
-    console.log(myArray);
-  })
-  .catch(error => {
-    console.log(error)
-  })
-
 }
+
+
+
 
 // create your own array with just the data you need
 function addObject(objectData) {  
