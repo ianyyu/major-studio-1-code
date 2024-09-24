@@ -1,5 +1,5 @@
 
-const apiKey = "WSSUafNbcTDwq9gQGRr2mNmRd6Sv0DvTejH3vSmt";  // Replace with your actual API key
+const apiKey = "";  // Replace with your actual API key
 
 
 // Search base URL
