@@ -1,75 +1,62 @@
-const apiKey = "WSSUafNbcTDwq9gQGRr2mNmRd6Sv0DvTejH3vSmt";  
+
+const apiKey = "WSSUafNbcTDwq9gQGRr2mNmRd6Sv0DvTejH3vSmt";  // Replace with your actual API key
+
 
 // Search base URL
 const searchBaseURL = "https://api.si.edu/openaccess/api/v1.0/search";
 
 // Constructing the initial search query
-const search = `type:edanmdm AND NMNHENTO AND (bee OR moth OR butterfly)`;
+const search = "type:edanmdm AND NMNHENTO AND (bee OR moth OR butterfly)";
 
 // Array to store the indexedStructured data
 let myArray = [];
-
-// String to hold the stringified JSON data
 let jsonString = '';
 
-// Fetches an array of terms based on term category
-// function fetchSearchData(searchTerm) {
-//     // Set pageSize to 8000
-//     let pageSize = 100;
-    
-//     // Modify the URL to include 'rows=8000' to fetch up to 8000 results
-//     let url = searchBaseURL + "?api_key=" + apiKey + "&q=" + searchTerm + `&rows=${pageSize}`;
-//     console.log("Fetching URL:", url);
-    
-//     window
-//     .fetch(url)
-//     .then(res => res.json())
-//     .then(data => {
-//         console.log("Initial Data:", data);
-
-//         // Check if there are any results
-//         if (data.response && data.response.rowCount > 0) {
-//             // Directly fetch data using the constructed URL
-//             fetchAllData(url);
-//         } else {
-//             console.log("No results found for the given search term.");
-//         }
-//     })
-//     .catch(error => {
-//         console.log("Error fetching search data:", error);
-//     });
-// }
-
+// Function to fetch search data
 function fetchSearchData(searchTerm) {
-  // Set pageSize to the maximum allowed by the API (e.g., 1000)
-  let pageSize = 1000; // You can adjust this to the actual maximum if it's different
-  let totalRecordsNeeded = 8000; // The total number of records you want
-  let numberOfPages = Math.ceil(totalRecordsNeeded / pageSize);
+    let pageSize = 1000; // Adjust based on API limits
+    let totalRecordsNeeded = 30000; // Total number of records you want
+    let numberOfPages = Math.ceil(totalRecordsNeeded / pageSize);
 
-  // Loop through each page
-  for (let i = 0; i < numberOfPages; i++) {
-      let start = i * pageSize;
-      let rows = pageSize;
+    let fetchPromises = []; // Array to collect fetch promises
 
-      // Adjust 'rows' for the last page if totalRecordsNeeded is not a multiple of pageSize
-      if (start + rows > totalRecordsNeeded) {
-          rows = totalRecordsNeeded - start;
-      }
+    // Loop through each page
+    for (let i = 0; i < numberOfPages; i++) {
+        let start = i * pageSize;
+        let rows = pageSize;
 
-      // Modify the URL to include 'start' and 'rows' parameters
-      let url = searchBaseURL + "?api_key=" + apiKey + "&q=" + searchTerm + `&start=${start}&rows=${rows}`;
-      console.log("Fetching URL:", url);
+        // Adjust 'rows' for the last page if necessary
+        if (start + rows > totalRecordsNeeded) {
+            rows = totalRecordsNeeded - start;
+        }
 
-      // Fetch data using the existing fetchAllData function
-      fetchAllData(url);
-  }
+        // Construct the URL correctly using template literals
+        let url = `${searchBaseURL}?api_key=${apiKey}&q=${searchTerm}&start=${start}&rows=${rows}`;
+        console.log("Fetching URL:", url);
+
+        // Fetch data and collect the promises
+        let fetchPromise = fetchAllData(url);
+        fetchPromises.push(fetchPromise);
+    }
+
+    // Wait for all fetch operations to complete
+    Promise.all(fetchPromises)
+        .then(() => {
+            // All data has been fetched and processed
+            jsonString = JSON.stringify(myArray);
+            console.log("Final JSON String:", jsonString);
+
+            // Proceed to download the JSON string
+            downloadJSON(jsonString, 'data.json');
+        })
+        .catch(error => {
+            console.log("Error in fetching data:", error);
+        });
 }
-
-
 
 // Fetching all the data listed under our search and pushing them into our array
 function fetchAllData(url) {
-    window
+    return window
         .fetch(url)
         .then(res => res.json())
         .then(data => {
@@ -80,40 +67,26 @@ function fetchAllData(url) {
                     // Initialize an object to store the extracted data
                     let record = {};
 
-                    // Extract indexedStructured data
-                    if (n.content && n.content.indexedStructured) {
-                        record.indexedStructured = n.content.indexedStructured;
-                    } else {
-                        record.indexedStructured = {};
-                    }
+                    // Extract indexedStructured data if available
+                    record.indexedStructured = n.content && n.content.indexedStructured ? n.content.indexedStructured : {};
 
                     // Extract the title
                     record.title = n.title || '';
 
-                    // Initialize category as unknown
+                    // Extract geoLocation if available
+                    record.geoLocation = n.content && n.content.indexedStructured && n.content.indexedStructured.geoLocation ? n.content.indexedStructured.geoLocation : 'unknown';
+
+                    // Skip this record if geoLocation is 'unknown'
+                    if (record.geoLocation === 'unknown') {
+                        return; // Continue to the next iteration
+                    }
+
+                    // Initialize category as 'unknown'
                     record.category = 'unknown';
 
-                    // Extract taxonomic ranks
-                    let taxOrder = '';
-                    let taxFamily = '';
-                    let taxGenus = '';
-                    let taxSpecies = '';
-
-                    if (record.indexedStructured.tax_order) {
-                        taxOrder = record.indexedStructured.tax_order[0].toLowerCase();
-                    }
-
-                    if (record.indexedStructured.tax_family) {
-                        taxFamily = record.indexedStructured.tax_family[0].toLowerCase();
-                    }
-
-                    if (record.indexedStructured.tax_genus) {
-                        taxGenus = record.indexedStructured.tax_genus[0].toLowerCase();
-                    }
-
-                    if (record.indexedStructured.tax_species) {
-                        taxSpecies = record.indexedStructured.tax_species[0].toLowerCase();
-                    }
+                    // Extract taxonomic ranks safely
+                    let taxOrder = record.indexedStructured.tax_order ? record.indexedStructured.tax_order[0].toLowerCase() : '';
+                    let taxFamily = record.indexedStructured.tax_family ? record.indexedStructured.tax_family[0].toLowerCase() : '';
 
                     // Classification logic
                     if (taxOrder === 'hymenoptera') {
@@ -129,7 +102,7 @@ function fetchAllData(url) {
                             record.category = 'moth';
                         }
                     } else {
-                        // Check if title contains keywords as a fallback
+                        // Fallback to checking the title
                         let titleLower = record.title.toLowerCase();
                         if (titleLower.includes('bee')) {
                             record.category = 'bee';
@@ -144,7 +117,6 @@ function fetchAllData(url) {
                     myArray.push(record);
                 });
 
-                jsonString = JSON.stringify(myArray); // Convert myArray to JSON string
                 console.log("Data Array with Categories:", myArray); // Log the array of data with categories
             } else {
                 console.log("No rows found in response.");
@@ -186,5 +158,19 @@ function isButterflyFamily(family) {
     return butterflyFamilies.includes(family);
 }
 
-// Initiate the data fetch with the modified code
+// Function to download JSON data
+function downloadJSON(jsonString, filename) {
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+// Initiate the data fetch
 fetchSearchData(search);
+
