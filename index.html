@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pollinators Around the World</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+
+
+</head>
+<body>
+  <div id="main-container">
+    <!-- Left Side: Text Content -->
+    <div id="text-container">
+      <h1>Pollinators Around the World</h1>
+      <p>
+      Data visualization based on the Smithsonian National Museum of Natural History's 
+      </br>Entomology Department collection of bees, butterflies, and moths, highlighting 
+      </br>global pollinator population density.</p>
+
+
+    
+      <p style="margin-top: 10px;"><b>Legend</p>
+      <img src="./Images/Orange.png" alt="Bee" /><span> Bee</span>
+      <img src="./Images/Green.png" alt="Butterfly" /><span> Butterfly</span>
+      <img src="./Images/Purple.png" alt="Moth" /><span> Moth</span>
+      <img src="./Images/Black.png" alt="Unknown" /><span> Unknown</span>
+      </p>
+    </div>
+
+    <!-- Right Side: Visualization Canvas -->
+    <div id="canvas-container" style="position: relative;">
+      <canvas id="stage"></canvas>
+    </div>
+  </div>
+
+  <!-- Load your JavaScript code -->
+  <script src="app.js" type="module" async></script>
+</body>
+</html>
+
