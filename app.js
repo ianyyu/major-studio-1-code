@@ -108,7 +108,7 @@ function* batches(iterable, size) {
 
 // Your existing fetchData function
 const fetchData = async () => {
-  const data = await d3.json("./data_sm.json");
+  const data = await d3.json("./data.json");
   return data;
 };
 
