@@ -15,7 +15,7 @@ let jsonString = '';
 // Function to fetch search data
 function fetchSearchData(searchTerm) {
     let pageSize = 1000; // Adjust based on API limits
-    let totalRecordsNeeded = 30000; // Total number of records you want
+    let totalRecordsNeeded = 25000; // Total number of records you want
     let numberOfPages = Math.ceil(totalRecordsNeeded / pageSize);
 
     let fetchPromises = []; // Array to collect fetch promises

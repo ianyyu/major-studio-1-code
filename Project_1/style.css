@@ -1,47 +1,69 @@
-/* styles.css */
-*{
-    background-color: rgb(255, 253, 251);
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap');
 
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two columns */
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    gap: 10px; /* Adjust the gap between visualizations */
-    margin-left: 40px;
-    margin-right: 40px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .visualization-container {
-    background-color: rgb(33, 97, 235);
-    border: 1px solid #0846e1ae;
-    border-radius: 10px;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0px 0px 2px hsla(0, 0%, 0%, 0.1);
-    width: 100%;
-  }
-  
-  h2 {
+/* Global styles */
+* {
+    box-sizing: border-box;
     margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-  }
-
-h1 {
-    font-weight: bold;
-    margin-left: 40px;
-    margin-top: 20px;
-    padding-right: 120px;
+    padding: 0;
 }
 
-p{
-    margin-left: 40px;
-    margin-bottom: 80px;
-    padding-right: 60%;  
+body, html {
+    font-size: 12px;
+    font-family: "Gowun Batang", serif;
+    background-color: rgb(244, 240, 230);
+    min-height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#main-container {
+    display: block; /* Change from flex to block layout */
+    width: 100%; /* Full width container */
+}
+
+#text-container {
+    width: 100%; /* Full width for the text container */
+    padding: 20px;
+}
+
+#visualization-container {
+    width: 100%; /* Full width for the visualization container */
+    position: relative;
+}
+
+#stage {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+#text-container h1 {
+    font-family: "Gowun Batang", serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 0.5em;
+}
+
+#text-container p {
+    font-family: "Gowun Batang", serif;
+    font-weight: 400;
+    font-size: 14;
+    line-height: 1.5em;
+}
+
+.tooltip {
+    position: absolute;
+    pointer-events: none;
+    font-size: 10px;
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+    padding: 2px;
+    border-radius: 2px;
+}
+
+/* Ensure no horizontal overflow */
+body, html, #main-container, #visualization-container, #stage {
+    max-width: 100%;
+    overflow-x: hidden;
 }
